@@ -63,7 +63,6 @@ public class RideMatchingService {
             }
 
             ride.setStatus(Ride.RideStatus.COMPLETED);
-            driver.setLocation(ride.getPickUpLocation());
             driver.setAvailable(true);
         } finally {
             driver.getLock().unlock();
