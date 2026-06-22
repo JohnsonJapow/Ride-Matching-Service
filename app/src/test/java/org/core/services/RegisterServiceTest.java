@@ -57,7 +57,7 @@ public class RegisterServiceTest {
     @Test
     void testConcurrentRegistration_SameDriverId() throws Exception {
         int threadCount = 20;
-        System.out.println(RegisterService.getAvailableDrivers().size());
+
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
 
         CountDownLatch startLatch = new CountDownLatch(1);
