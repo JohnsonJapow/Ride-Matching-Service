@@ -87,9 +87,9 @@ public class App {
                         if (!drivers.isEmpty()) {
                             System.out.println("Nearest available drivers:");
                             for (Driver driver : drivers) {
-                                System.out.println("- " + driver.getId()
-                                        + " | " + driver.getName()
-                                        + " | (" + driver.getLocation().x() + "," + driver.getLocation().y() + ")");
+                                System.out.println("-Driver ID: " + driver.getId()
+                                        + " | Driver Name:" + driver.getName()
+                                        + " | Location(" + driver.getLocation().x() + "," + driver.getLocation().y() + ")");
                             }
                         } else {
                             System.out.println("No available driver, please try again later.");
