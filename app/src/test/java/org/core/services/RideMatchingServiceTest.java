@@ -12,7 +12,7 @@ import java.util.concurrent.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RideMatchingServiceTest {
-
+    int limit = 10;
     private RideMatchingService rideMatchingService;
     private Location dummyLocation;
 
@@ -27,7 +27,7 @@ class RideMatchingServiceTest {
     @Test
     void testRequestRide_Success() {
         Driver driver = new Driver("D1", "Alice", dummyLocation);
-        int limit = 10;
+        
         RegisterService.registerDriver(driver.getId(), driver);
 
         Ride ride = rideMatchingService.requestRide(dummyLocation, limit);
@@ -35,12 +35,12 @@ class RideMatchingServiceTest {
         assertNotNull(ride);
         assertEquals(driver.getId(), ride.getDriver().getId());
         assertFalse(RegisterService.getDriver(driver.getId()).get().isAvailable());
-        assertEquals(Ride.RideStatus.REQUESTED, ride.getStatus()); // Assumes starting status is REQUESTED
+        assertEquals(Ride.RideStatus.REQUESTED, ride.getStatus());
     }
 
     @Test
     void testRequestRide_NoDriversAvailable_ThrowsException() {
-        int limit = 10;
+
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
             rideMatchingService.requestRide(dummyLocation, limit);
         });
@@ -50,7 +50,7 @@ class RideMatchingServiceTest {
     @Test
     void testCompleteRide_Success() {
         Driver driver = new Driver("D1", "Alice", dummyLocation);
-        int limit = 10;
+
         RegisterService.registerDriver(driver.getId(), driver);
         Ride ride = rideMatchingService.requestRide(dummyLocation, limit);
         assertTrue(RegisterService.getAvailableDrivers().isEmpty());
@@ -62,7 +62,7 @@ class RideMatchingServiceTest {
 
     @Test
     void testCompleteRide_NotFound_ThrowsException() {
-        // Act & Assert
+
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             rideMatchingService.completeRide("non-existent-ride-id");
         });
@@ -72,7 +72,7 @@ class RideMatchingServiceTest {
     @Test
     void testCompleteRide_AlreadyCompleted_ThrowsException() {
         Driver driver = new Driver("D1", "Alice", dummyLocation);
-        int limit = 10;
+
         RegisterService.registerDriver(driver.getId(), driver);
         Ride ride = rideMatchingService.requestRide(dummyLocation, limit);
         rideMatchingService.completeRide(ride.getId());
@@ -86,7 +86,7 @@ class RideMatchingServiceTest {
     @Test
     void testConcurrentRideRequests_OnlyOneDriverAllocated() throws InterruptedException, ExecutionException {
         Driver driver = new Driver("D1", "Exclusive Driver", dummyLocation);
-        int limit = 10;
+
         RegisterService.registerDriver(driver.getId(), driver);
         int threadCount = 5;
         ExecutorService executor = Executors.newFixedThreadPool(threadCount);
@@ -115,7 +115,7 @@ class RideMatchingServiceTest {
         boolean matchOccurred = successLatch.await(2, TimeUnit.SECONDS);
         assertTrue(matchOccurred);
 
-        executor.shutdownNow(); // Force-interrupt the waiting threads looping in requestRide
+        executor.shutdownNow();
 
         boolean losersInterrupted = losersLatch.await(2, TimeUnit.SECONDS);
         assertTrue(losersInterrupted);
