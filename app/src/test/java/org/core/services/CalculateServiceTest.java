@@ -10,7 +10,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalculateServiceTest {
-
+    int limit = 10;
     private RideMatchingService rideMatchingService;
 
     @BeforeEach
@@ -33,7 +33,7 @@ public class CalculateServiceTest {
         RegisterService.registerDriver(d3.getId(), d3);
 
         List<Driver> result = CalculateService.getNearestAvailableDrivers(RegisterService.getAvailableDrivers(), pickup,
-                3);
+                limit);
 
         assertEquals(3, result.size());
         assertEquals(d1.getId(), result.get(0).getId());
@@ -44,7 +44,6 @@ public class CalculateServiceTest {
     @Test
     void testGetNearestAvailableDrivers_FiltersUnavailableDrivers() {
         Location pickup = new Location("0", "0");
-        int limit = 10;
         Driver availableDriver = new Driver("D1", "Alice", new Location("1", "1"));
 
         Driver unavailableDriver = new Driver("D2", "Bob", new Location("0.1", "0.1"));
@@ -54,9 +53,9 @@ public class CalculateServiceTest {
         RegisterService.registerDriver(unavailableDriver.getId(), unavailableDriver);
 
         rideMatchingService.requestRide(unavailableDriver.getLocation(), limit);
-
+        
         List<Driver> result = CalculateService.getNearestAvailableDrivers(RegisterService.getAvailableDrivers(), pickup,
-                10);
+                limit);
 
         assertEquals(1, result.size());
         assertEquals(availableDriver.getId(), result.get(0).getId());
@@ -86,7 +85,7 @@ public class CalculateServiceTest {
     void testGetNearestAvailableDrivers_NoAvailableDrivers() {
         Driver d1 = new Driver("D1", "A", new Location("1", "0"));
         Driver d2 = new Driver("D2", "B", new Location("2", "0"));
-        int limit = 10;
+
         RegisterService.registerDriver(d1.getId(), d1);
         RegisterService.registerDriver(d2.getId(), d2);
 
@@ -95,7 +94,7 @@ public class CalculateServiceTest {
 
         List<Driver> result = CalculateService.getNearestAvailableDrivers(RegisterService.getAvailableDrivers(),
                 new Location("0", "0"),
-                10);
+                limit);
 
         assertTrue(result.isEmpty());
     }
@@ -104,7 +103,7 @@ public class CalculateServiceTest {
     void testGetNearestAvailableDrivers_EmptyRegistry() {
         List<Driver> result = CalculateService.getNearestAvailableDrivers(RegisterService.getAvailableDrivers(),
                 new Location("0", "0"),
-                10);
+                limit);
 
         assertTrue(result.isEmpty());
     }
@@ -120,8 +119,10 @@ public class CalculateServiceTest {
         RegisterService.registerDriver(d2.getId(), d2);
 
         List<Driver> result = CalculateService.getNearestAvailableDrivers(RegisterService.getAvailableDrivers(), pickup,
-                10);
+                limit);
 
         assertEquals(2, result.size());
+        assertEquals("D1", result.get(0).getId());
+        assertEquals("D2", result.get(1).getId());
     }
 }
