@@ -26,7 +26,7 @@ A Java backend service that matches riders with the nearest available drivers in
 
 ```bash
 mkdir new-folder
-git clone <your-repo-url>
+git clone https://github.com/JohnsonJapow/Ride-Matching-Service.git
 cd ride-matching-service
 ```
 
