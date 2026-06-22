@@ -1,0 +1,17 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+**/build/**
+.vscode
+**/src/main/resources/static/**
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/java/**
+!**/src/test/**
+**/bin/**
+.env
+
+### Mac OS ###
+**/.DS_Store
+
+# Ignore Gradle build output directory
+build
