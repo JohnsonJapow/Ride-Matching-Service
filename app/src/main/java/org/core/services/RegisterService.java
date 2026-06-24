@@ -18,6 +18,12 @@ public class RegisterService {
                 .toList();
     }
 
+    /**
+     * Retrieves a driver by their unique identifier.
+     *
+     * @param id
+     * @return an {@link Optional} containing the driver if found, or empty if not
+     */
     static Optional<Driver> getDriver(String id) {
         return Optional.ofNullable(drivers.get(id));
     }
@@ -43,6 +49,15 @@ public class RegisterService {
             driver.getLock().unlock();
         }
     }
+
+    /**
+     * Registers a new driver or updates an existing driver's core information.
+     * If the driver already exists in the system, their name, location, and availability 
+     * are updated safely under their specific lock instance. If they do not exist, a new 
+     * {@link Driver} instance is created and stored.
+     * @param id     the unique ID to associate with the driver
+     * @param driver the data container holding the driver info
+     */
     public static void registerDriver(String id, Driver driver) {
         drivers.compute(id,
                 (k, existingDriver) -> {

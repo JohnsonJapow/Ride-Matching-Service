@@ -14,6 +14,22 @@ public class RideMatchingService {
     private final int REQUEST_RETRY_TIME = 3;
     public static final int DEFAULT_NUMBER_OF_DRIVERS = 10;
 
+    /**
+     * Requests a ride by looking for the nearest available drivers within a
+     * specified limit.
+     * If a driver is already. locked by another transaction, it skips to the next
+     * candidate. If no drivers are successfully
+     * matched, the process retries up to 3 times with a 1-second delay between
+     * attempts.
+     *
+     * @param pickupLocation
+     * @param limit          the maximum number of nearby drivers to evaluate per
+     *                       attempt
+     * @return a newly created {@link Ride} instance assigned to a locked driver
+     * @throws IllegalStateException if no driver could be matched after all retries
+     *                               are exhausted
+     * @throws RuntimeException
+     */
     public Ride requestRide(Location pickupLocation, int limit) {
         for (int attempt = 1; attempt <= REQUEST_RETRY_TIME; attempt++) {
             // find the nearest available drivers
@@ -51,6 +67,15 @@ public class RideMatchingService {
         throw new IllegalStateException("No available drivers nearby after " + REQUEST_RETRY_TIME + " attempts.");
     }
 
+    /**
+     * Marks an active ride as completed and restores the assigned driver's
+     * availability status.
+     * 
+     * @param rideId the unique identifier of the ride to be completed
+     * @throws IllegalArgumentException if no ride matches the provided ID
+     * @throws IllegalStateException    if the specified ride has already been
+     *                                  completed
+     */
     public void completeRide(String rideId) {
         Ride ride = rides.get(rideId);
         if (ride == null)
